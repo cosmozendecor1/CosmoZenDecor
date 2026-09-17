@@ -38,13 +38,13 @@
   #splash img{
     width:min(58vw, 420px); height:min(58vw, 420px); object-fit:contain;
     opacity:0; transform:scale(.55);
-    animation:logoPop .8s cubic-bezier(.34,1.56,.64,1) forwards;
+    animation:logoPop .5s cubic-bezier(.34,1.56,.64,1) forwards;
   }
   #splash .cap{
     margin-top:8px; font-family:'Fraunces',serif; font-style:italic; font-weight:500;
     font-size:min(6.2vw, 2.6rem); color:var(--ink); letter-spacing:.01em; text-align:center;
     opacity:0; transform:translateY(14px);
-    animation:capIn .7s ease forwards 1.05s;
+    animation:capIn .35s ease forwards 1s;
   }
   @keyframes logoPop{ to{opacity:1; transform:scale(1);} }
   @keyframes capIn{ to{opacity:1; transform:translateY(0);} }
@@ -293,11 +293,11 @@
   </div>
 
 <script>
-  window.addEventListener('load', () => {
+  document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       document.getElementById('splash').classList.add('hide');
       document.getElementById('app').classList.add('show');
-    }, 3000);
+    }, 2000);
   });
 
   const RATES = {
