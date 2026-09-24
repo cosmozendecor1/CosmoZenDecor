@@ -36,15 +36,16 @@
   }
   #splash.hide{ opacity:0; visibility:hidden; pointer-events:none; }
   #splash img{
-    width:min(58vw, 420px); height:min(58vw, 420px); object-fit:contain;
+    width:min(85vmin, 680px); height:min(85vmin, 680px); object-fit:contain;
     opacity:0; transform:scale(.55);
     animation:logoPop .5s cubic-bezier(.34,1.56,.64,1) forwards;
   }
   #splash .cap{
-    margin-top:8px; font-family:'Fraunces',serif; font-style:italic; font-weight:500;
-    font-size:min(6.2vw, 2.6rem); color:var(--ink); letter-spacing:.01em; text-align:center;
+    margin-top:18px; font-family:'Fraunces',serif; font-style:italic; font-weight:500;
+    font-size:min(9vw, 4.2rem); color:var(--ink); letter-spacing:.01em; text-align:center;
     opacity:0; transform:translateY(14px);
     animation:capIn .35s ease forwards 1s;
+    padding:0 20px;
   }
   @keyframes logoPop{ to{opacity:1; transform:scale(1);} }
   @keyframes capIn{ to{opacity:1; transform:translateY(0);} }
@@ -126,6 +127,21 @@
   }
   .num-box:focus{ outline:none; border-color:var(--magenta); }
   .range-caption{ display:flex; justify-content:space-between; margin-top:6px; font-size:.72rem; color:var(--muted); }
+
+  .upload-box{
+    border:1.5px dashed var(--line); border-radius:14px; padding:14px 16px; cursor:pointer;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .upload-box:hover{ border-color:var(--magenta); background:var(--blush); }
+  .upload-prompt{ color:var(--muted); font-size:.85rem; display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; }
+  .upload-preview{ display:flex; align-items:center; gap:12px; }
+  .upload-preview img{ width:56px; height:56px; object-fit:cover; border-radius:10px; border:1px solid var(--line); flex-shrink:0; }
+  .upload-preview .fname{ font-size:.8rem; color:var(--muted); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .remove-img{
+    border:1px solid var(--line); background:#fff; border-radius:8px; padding:6px 10px;
+    font-size:.74rem; cursor:pointer; color:var(--muted); font-family:'Space Grotesk',sans-serif; flex-shrink:0;
+  }
+  .remove-img:hover{ border-color:var(--magenta); color:var(--magenta-deep); }
 
   .visual-card{
     background:linear-gradient(160deg,#1B1611 0%, var(--ink) 100%);
@@ -261,6 +277,19 @@
           <div class="range-caption"><span>1 cm</span><span>144 cm</span></div>
         </div>
 
+        <div class="field">
+          <label>Reference Image (optional)</label>
+          <div class="upload-box" id="uploadBox">
+            <input type="file" id="refImage" accept="image/*" hidden />
+            <div id="uploadPrompt" class="upload-prompt"><span>📎</span> Click to attach a photo of your design idea</div>
+            <div id="uploadPreview" class="upload-preview" style="display:none;">
+              <img id="previewImg" alt="Reference preview" />
+              <span class="fname" id="previewName"></span>
+              <button type="button" id="removeImg" class="remove-img">Remove</button>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div class="visual-card">
@@ -340,16 +369,62 @@
 
   const WHATSAPP_NUMBER = '918802715978';
 
+  let refImageFile = null;
+  const uploadBox = document.getElementById('uploadBox');
+  const refImageInput = document.getElementById('refImage');
+  const uploadPrompt = document.getElementById('uploadPrompt');
+  const uploadPreview = document.getElementById('uploadPreview');
+  const previewImg = document.getElementById('previewImg');
+  const previewName = document.getElementById('previewName');
+
+  uploadBox.addEventListener('click', (e) => {
+    if (e.target.id !== 'removeImg') refImageInput.click();
+  });
+  refImageInput.addEventListener('change', () => {
+    const file = refImageInput.files[0];
+    if (!file) return;
+    refImageFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImg.src = e.target.result;
+      previewName.textContent = file.name;
+      uploadPrompt.style.display = 'none';
+      uploadPreview.style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('removeImg').addEventListener('click', (e) => {
+    e.stopPropagation();
+    refImageFile = null;
+    refImageInput.value = '';
+    uploadPrompt.style.display = 'flex';
+    uploadPreview.style.display = 'none';
+  });
+
   function currentQuoteText(){
     const matLabel = state.material === 'mdf' ? 'MDF Wood' : 'Acrylic';
-    return `Hi CosmoZen Decor, I'd like a quote for:\n`
+    let text = `Hi CosmoZen Decor, I'd like a quote for:\n`
       + `Material: ${matLabel}, ${state.thickness}mm\n`
       + `Size: ${state.length}cm x ${state.breadth}cm\n`
       + `Estimated price shown: Rs. ${currentFinalPrice.toLocaleString('en-IN')}\n\n`
       + `Could you confirm this and the next steps?`;
+    if (refImageFile) {
+      text += `\n\n(I'm attaching a reference photo of the design I want — see the file just saved to my Downloads.)`;
+    }
+    return text;
   }
 
   document.getElementById('ctaBtn').addEventListener('click', () => {
+    if (refImageFile) {
+      const url = URL.createObjectURL(refImageFile);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CosmoZen-Reference-' + refImageFile.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    }
     const msg = encodeURIComponent(currentQuoteText());
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
   });
