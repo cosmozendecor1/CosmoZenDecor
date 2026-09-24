@@ -37,14 +37,14 @@
   #splash.hide{ opacity:0; visibility:hidden; pointer-events:none; }
   #splash img{
     width:min(85vmin, 680px); height:min(85vmin, 680px); object-fit:contain;
-    opacity:0; transform:scale(.55);
-    animation:logoPop .5s cubic-bezier(.34,1.56,.64,1) forwards;
+    opacity:0; transform:scale(.8);
+    animation:logoPop 1.6s cubic-bezier(.22,1,.36,1) forwards;
   }
   #splash .cap{
     margin-top:18px; font-family:'Fraunces',serif; font-style:italic; font-weight:500;
     font-size:min(9vw, 4.2rem); color:var(--ink); letter-spacing:.01em; text-align:center;
     opacity:0; transform:translateY(14px);
-    animation:capIn .35s ease forwards 1s;
+    animation:capIn .9s ease forwards 1.6s;
     padding:0 20px;
   }
   @keyframes logoPop{ to{opacity:1; transform:scale(1);} }
@@ -326,7 +326,7 @@
     setTimeout(() => {
       document.getElementById('splash').classList.add('hide');
       document.getElementById('app').classList.add('show');
-    }, 2000);
+    }, 3200);
   });
 
   const RATES = {
