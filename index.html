@@ -236,7 +236,7 @@
 
     <div class="hero-line">
       <h1>Know your price<br/><em>before you ask.</em></h1>
-      <div class="sub">Pick a material, set your size — see a real, all-inclusive estimate instantly.</div>
+      <div class="sub">Pick a material, set your size — see a real estimate instantly.</div>
     </div>
 
     <div class="grid">
@@ -303,8 +303,8 @@
         <div class="price-block">
           <div class="price-label">Estimated price · 1 unit</div>
           <div class="price-num">₹<span id="priceNum">0</span></div>
-          <div class="price-note">All-inclusive — material, cutting, design preparation &amp; GST.</div>
-          <div class="design-note">Intricate custom artwork may involve additional design time, confirmed with you before production.</div>
+          <div class="price-note">Includes material, cutting, design preparation &amp; GST. Does not include transport.</div>
+          <div class="design-note">Pricing does not include transport, and the final price may vary depending on the complexity of the design. Intricate custom artwork may involve additional design time, confirmed with you before production.</div>
           <div class="min-note" id="minNote">Minimum order value ₹300 applies</div>
         </div>
         <button class="cta" id="ctaBtn">Request This Quote on WhatsApp</button>
@@ -406,7 +406,7 @@
     let text = `Hi CosmoZen Decor, I'd like a quote for:\n`
       + `Material: ${matLabel}, ${state.thickness}mm\n`
       + `Size: ${state.length}cm x ${state.breadth}cm\n`
-      + `Estimated price shown: Rs. ${currentFinalPrice.toLocaleString('en-IN')}\n\n`
+      + `Estimated price shown (excluding transport): Rs. ${currentFinalPrice.toLocaleString('en-IN')}\n\n`
       + `Could you confirm this and the next steps?`;
     if (refImageFile) {
       text += `\n\n(I'm attaching a reference photo of the design I want — see the file just saved to my Downloads.)`;
